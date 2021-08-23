@@ -12,8 +12,11 @@ const ProfilePage = () => {
   const [state, setState] = useState({
     email: user.email,
     password: user.password,
-    name: user.name,
     confirmPassword: "",
+    name: user.name,
+    join: user.join,
+    post: user.post,
+    avatar: user.avatar,
   });
 
   const [error, setError] = useState({
@@ -58,7 +61,27 @@ const ProfilePage = () => {
   };
 
   const handleProfileSubmit = (e) => {
-    localStorage.setItem(`user/${user.email}`, JSON.stringify(state));
+    //delete the old user's version
+    localStorage.removeItem(`user/${user.email}`);
+    //create a new one
+    localStorage.setItem(`user/${state.email}`, JSON.stringify(state));
+    //update current user as well
+    localStorage.setItem("currentUser", JSON.stringify(state));
+
+    //update user info on post as well
+    for (let i = 0; i < localStorage.length; i++) {
+      if (localStorage.key(i).includes(`post/${user.email}`)) {
+        let key = localStorage.key(i);
+        let post = JSON.parse(localStorage.getItem(key));
+        post.author = state.email;
+        post.authorAvatar = state.avatar;
+        localStorage.removeItem(key);
+        localStorage.setItem(
+          `post/${state.email}/${post.id}`,
+          JSON.stringify(post)
+        );
+      }
+    }
   };
   const ErrorMessageEmail = (
     <>
@@ -78,6 +101,7 @@ const ProfilePage = () => {
       <center>
         <UserCard handleShowEditProfile={handleShowEditProfile} user={user} />
       </center>
+      {/* Edit User name and email */}
       <SP.Modal show={showEditProfile}>
         <Modal.Title>
           <center>Edit Profile</center>
@@ -102,6 +126,13 @@ const ProfilePage = () => {
                 onChange={handleChange}
                 placeholder="Full name"
               />
+              <SP.FormControl
+                name="avatar"
+                type="text"
+                value={state.avatar}
+                onChange={handleChange}
+                placeholder="Your Avatar Image: Put imageUrl here"
+              />
 
               <Modal.Footer>
                 <SP.ModalFooterButton type="submit" variant="success">
@@ -121,6 +152,7 @@ const ProfilePage = () => {
           </center>
         </Modal.Body>
       </SP.Modal>
+
       {/* edit password */}
       <SP.Modal show={showEditPassword}>
         <Modal.Title>

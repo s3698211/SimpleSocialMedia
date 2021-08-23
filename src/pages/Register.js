@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { useHistory } from "react-router";
 import { StyledRegister as SR } from "../components/register/RegisterStyling";
+import { Modal } from "react-bootstrap";
 import moment from "moment";
 export const Register = () => {
   const [state, setState] = useState({
@@ -11,6 +12,7 @@ export const Register = () => {
     name: "",
     join: moment().format("MMM Do YYYY"),
     post: "0",
+    avatar: "",
   });
 
   const [error, setError] = useState({
@@ -100,46 +102,55 @@ export const Register = () => {
   return (
     <SR.Container>
       <center>
-        <SR.Form onSubmit={handleSubmit}>
-          <SR.FormControl
-            required
-            name="email"
-            type="email"
-            value={state.email}
-            onChange={handleChange}
-            placeholder="name@example.com"
-          />
-          {error.email !== "" ? ErrorMessageEmail : ""}
-          <SR.FormControl
-            required
-            name="name"
-            type="text"
-            value={state.name}
-            onChange={handleChange}
-            placeholder="Full name"
-          />
-          <SR.FormControl
-            required
-            name="password"
-            type="password"
-            value={state.password}
-            onChange={handleChange}
-            placeholder="Password"
-          />
+        <Modal style={{ marginTop: "5%" }} show={true}>
+          <Modal.Title style={{ textAlign: "center" }}>
+            Registration Form
+          </Modal.Title>
+          <Modal.Body>
+            <center>
+              <SR.Form onSubmit={handleSubmit}>
+                <SR.FormControl
+                  required
+                  name="email"
+                  type="email"
+                  value={state.email}
+                  onChange={handleChange}
+                  placeholder="name@example.com"
+                />
+                {error.email !== "" ? ErrorMessageEmail : ""}
+                <SR.FormControl
+                  required
+                  name="name"
+                  type="text"
+                  value={state.name}
+                  onChange={handleChange}
+                  placeholder="Full name"
+                />
+                <SR.FormControl
+                  required
+                  name="password"
+                  type="password"
+                  value={state.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                />
 
-          {error.password !== "" ? ErrorMessagePassword : ""}
-          <SR.FormControl
-            required
-            name="confirmPassword"
-            type="password"
-            value={state.confirmPassword}
-            onChange={handleChange}
-            placeholder="Confirm Password"
-          />
+                {error.password !== "" ? ErrorMessagePassword : ""}
+                <SR.FormControl
+                  required
+                  name="confirmPassword"
+                  type="password"
+                  value={state.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                />
 
-          {error.password !== "" ? ErrorMessagePassword : ""}
-          <SR.Button type="submit">Submit</SR.Button>
-        </SR.Form>
+                {error.password !== "" ? ErrorMessagePassword : ""}
+                <SR.Button type="submit">Submit</SR.Button>
+              </SR.Form>
+            </center>
+          </Modal.Body>
+        </Modal>
       </center>
     </SR.Container>
   );

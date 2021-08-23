@@ -4,6 +4,7 @@ import { StyledLandingPage } from "../../pages/LandingPageStyling";
 export const StyledLogin = {};
 
 StyledLogin.Container = styled(StyledLandingPage.Container)`
+  fontfamily: Nunito;
   padding-top: 250px;
 `;
 

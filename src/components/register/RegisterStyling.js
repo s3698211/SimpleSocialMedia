@@ -6,7 +6,7 @@ import { StyledNavbar } from "../navbar/NavStyling";
 
 export const StyledRegister = {};
 StyledRegister.Container = styled(StyledLandingPage.Container)`
-  padding-top: 200px;
+  fontfamily: Nunito;
 `;
 
 StyledRegister.Form = styled(Form)``;

@@ -4,12 +4,17 @@ import moment from "moment";
 import { HiOutlinePhotograph } from "react-icons/hi";
 
 export const CreatePost = (props) => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser =
+    localStorage.getItem("currentUser") !== null
+      ? JSON.parse(localStorage.getItem("currentUser"))
+      : null;
   const [post, setPost] = useState({
+    id: "",
     body: "",
     imgUrl: "",
     createdAt: moment().format("MMM Do YYYY"),
-    author: currentUser.email,
+    author: currentUser !== null ? currentUser.email : "",
+    authorAvatar: currentUser !== null ? currentUser.avatar : "",
   });
   const handleChange = (e) => {
     setPost((post) => ({
@@ -19,14 +24,18 @@ export const CreatePost = (props) => {
   };
 
   const clearInput = () => {
-    setPost((post) => ({
-      ...post,
+    setPost({
+      id: "",
       body: "",
       imgUrl: "",
-    }));
+      createdAt: moment().format("MMM Do YYYY"),
+      author: currentUser.email,
+      authorAvatar: currentUser.avatar,
+    });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    post.id = (parseInt(currentUser.post) + 1).toString();
     localStorage.setItem(
       `post/${currentUser.email}/${parseInt(currentUser.post) + 1}`,
       JSON.stringify(post)
@@ -38,7 +47,8 @@ export const CreatePost = (props) => {
       `user/${currentUser.email}`,
       JSON.stringify(currentUser)
     );
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    await localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
     clearInput();
     props.handleReRender();
   };
@@ -53,7 +63,7 @@ export const CreatePost = (props) => {
                 className="postBody"
                 name="body"
                 as="textarea"
-                value={post.name}
+                value={post.body}
                 onChange={handleChange}
                 placeholder="Write something ..."
               />
@@ -64,10 +74,11 @@ export const CreatePost = (props) => {
                   <SCP.Row>
                     <SCP.Form.Label>
                       <HiOutlinePhotograph
-                        style={{ marginRight: "5px", marginTop: "10px" }}
+                        style={{ marginRight: "5px", marginTop: "15px" }}
                       />
                     </SCP.Form.Label>{" "}
                     <SCP.FormControl
+                      style={{ height: "35px" }}
                       className="postFooter"
                       name="imgUrl"
                       type="text"

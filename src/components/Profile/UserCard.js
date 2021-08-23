@@ -3,14 +3,20 @@ import moment from "moment";
 import { useHistory } from "react-router";
 import { Card, Button, Modal } from "react-bootstrap";
 import { defaultAvatar } from "../../Helper";
-const UserCard = (props) => {
-  const { user, handleShowEditProfile } = props;
-  const date = Date.parse(user.join);
+import { StyledUserCard as SUC } from "./UserCardStyling";
+const UserCard = ({ user, handleShowEditProfile }) => {
   const history = useHistory();
-  const newDate = moment(date, "DD-MM-YYYY");
+
   const [show, setShow] = useState(false);
+
   const handeDelete = () => {
     localStorage.removeItem(`user/${user.email}`);
+
+    for (var i = 0; i < localStorage.length; i++) {
+      if (localStorage.key(i).includes(`post/${user.email}`)) {
+        localStorage.removeItem(localStorage.key(i));
+      }
+    }
     localStorage.setItem("currentUser", "");
     alert("Deleted user.");
     setShow(false);
@@ -20,7 +26,11 @@ const UserCard = (props) => {
   return (
     <>
       <Card style={{ width: "18rem" }}>
-        <Card.Img variant="top" src={defaultAvatar} />
+        <SUC.ImageProfile
+          rounded
+          variant="top"
+          src={user.avatar !== "" ? user.avatar : defaultAvatar}
+        />
         <Card.Body>
           <Card.Title>{user.email}</Card.Title>
 
